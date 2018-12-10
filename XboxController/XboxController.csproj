@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RawInput.Net\RawInput.Net.csproj">
+      <Project>{6cf3802c-4511-4ce9-add7-5d75397721b2}</Project>
+      <Name>RawInput.Net</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

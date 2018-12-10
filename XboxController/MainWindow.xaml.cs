@@ -23,6 +23,27 @@ namespace XboxController
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			var intPtr = IntPtr.Zero;
+			var numberOfActiveDevices = RawInput.Net.RawInput.InitialiseGamepads(intPtr);
+
+			var devices = new IntPtr[numberOfActiveDevices];
+			for (var deviceIndex = 0; deviceIndex < numberOfActiveDevices; deviceIndex++)
+			{
+				devices[deviceIndex] = RawInput.Net.RawInput.GetDevicePath(deviceIndex);
+			}
+
+			while(true)
+			{
+
+				RawInput.Net.RawInput.ProcessInput(IntPtr.Zero, devices[0],
+					out byte buttons, out int x, out int y);
+
+				System.Diagnostics.Debug.Write(buttons);
+				System.Diagnostics.Debug.Write(x);
+				System.Diagnostics.Debug.WriteLine(y);
+				System.Threading.Thread.Sleep(100);
+			}
 		}
 	}
 }
