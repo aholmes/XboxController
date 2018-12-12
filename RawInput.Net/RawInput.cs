@@ -22,6 +22,6 @@ namespace RawInput.Net
 		public static extern int PollDeviceChange();
 		[DllImport(Import.Lib, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int ProcessInput(IntPtr wParam, IntPtr lParam,
-			out byte buttons, out int x, out int y);
+			out ushort button, out int x, out int y);
 	}
 }

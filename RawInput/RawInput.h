@@ -20,9 +20,9 @@
 static BOOL ReadDeviceName(int index, HANDLE handle);
 static BOOL ReadDeviceInfo(int index, HANDLE handle);
 static int FindIndex(HANDLE handle);
-static void ParseRawInput(PRAWINPUT pRawInput, unsigned char * buttons, int * x, int * y);
+static void ParseRawInput(PRAWINPUT pRawInput, PUSHORT button, int *x, int *y);
 
 ADAPTERS_API int InitialiseGamepads(HWND handle);
 ADAPTERS_API TCHAR * GetDevicePath(int index);
 ADAPTERS_API int PollDeviceChange();
-ADAPTERS_API int ProcessInput(HANDLE wParam, HANDLE lParam, unsigned char * buttons, int * x, int * y);
+ADAPTERS_API int ProcessInput(HANDLE wParam, HANDLE lParam, PUSHORT button, int *x, int *y);

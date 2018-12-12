@@ -22,8 +22,6 @@ namespace XboxController
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private bool IsLoaded;
-
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -33,39 +31,34 @@ namespace XboxController
 		{
 			var mainWindowHandle = Process.GetCurrentProcess().MainWindowHandle;
 			var numberOfActiveDevices = RawInput.Net.RawInput.InitialiseGamepads(mainWindowHandle);
+			ComponentDispatcher.ThreadPreprocessMessage += ComponentDispatcher_ThreadPreprocessMessage;
 
-			var devices = new IntPtr[numberOfActiveDevices];
-			for (var deviceIndex = 0; deviceIndex < numberOfActiveDevices; deviceIndex++)
-			{
-				devices[deviceIndex] = RawInput.Net.RawInput.GetDevicePath(deviceIndex);
-			}
-
-			IsLoaded = true;
+			//var devices = new IntPtr[numberOfActiveDevices];
+			//for (var deviceIndex = 0; deviceIndex < numberOfActiveDevices; deviceIndex++)
+			//{
+			//	devices[deviceIndex] = RawInput.Net.RawInput.GetDevicePath(deviceIndex);
+			//}
 		}
 
-		protected override void OnSourceInitialized(EventArgs e)
+		private void ComponentDispatcher_ThreadPreprocessMessage(ref MSG msg, ref bool handled)
 		{
-			base.OnSourceInitialized(e);
-			var source = PresentationSource.FromVisual(this) as HwndSource;
-			source.AddHook(WndProc);
-		}
+			if (msg.message != 0x00ff) return;
 
-		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-		{
-			if (!IsLoaded || msg != 0x00ff) return IntPtr.Zero;
+		// 00ff - 255 is WM_INPUT
+			//if (!IsLoaded || msg != 0x00ff) return IntPtr.Zero;
 			// Handle messages...
 
-			RawInput.Net.RawInput.ProcessInput(wParam, lParam,
-				out byte buttons, out int x, out int y);
+			RawInput.Net.RawInput.ProcessInput(msg.wParam, msg.lParam,
+				out ushort button, out int x, out int y);
 
-			System.Diagnostics.Debug.Write(buttons + "|");
-			System.Diagnostics.Debug.Write(x+"|");
-			System.Diagnostics.Debug.WriteLine(y);
+			System.Diagnostics.Debug.Write(button + "|");
+			//System.Diagnostics.Debug.Write(x+"|");
+			//System.Diagnostics.Debug.WriteLine(y);
 
 
 			handled = true;
 
-			return IntPtr.Zero;
+			//return IntPtr.Zero;
 		}
 	}
 }
